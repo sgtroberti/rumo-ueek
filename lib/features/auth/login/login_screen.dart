@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String? _loginError;
   bool isLoading = false;
 
   @override
@@ -134,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 1.40,
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24),
                         Form(
                           key: _formKey,
                           autovalidateMode: AutovalidateMode.onUnfocus,
@@ -143,9 +144,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               TextFormField(
                                 controller: _emailController,
-                                decoration: const InputDecoration(
-                                  hintText: 'E-mail',
-                                ),
+                                decoration: InputDecoration(hintText: 'E-mail'),
+
                                 validator: (value) {
                                   final invalidEmailText =
                                       'Insira um e-mail válido';
@@ -185,9 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               TextFormField(
                                 controller: _passwordController,
-                                decoration: const InputDecoration(
-                                  hintText: 'Senha',
-                                ),
+                                decoration: InputDecoration(hintText: 'Senha'),
                                 obscureText: true,
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
@@ -199,6 +197,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             ],
                           ),
                         ),
+                        if (_loginError != null &&
+                            (_loginError == 'Usuário não encontrado' ||
+                                _loginError == 'Senha incorreta' ||
+                                _loginError == 'E-mail ou senha incorretos'))
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8),
+                            child: Text(
+                              _loginError!,
+                              style: TextStyle(color: Colors.red, fontSize: 14),
+                            ),
+                          ),
+
                         const SizedBox(height: 62),
                         SizedBox(
                           width: double.maxFinite,
@@ -206,6 +216,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: isLoading
                                 ? null
                                 : () async {
+                                    log('Botão pressionado');
+                                    setState(() {
+                                      _loginError = null;
+                                    });
+
                                     final isValid =
                                         _formKey.currentState?.validate() ??
                                         false;
@@ -229,7 +244,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                           context,
                                         ).pushReplacementNamed(HomeRoutes.home);
                                       } on AuthException catch (error) {
-                                        log(error.toString());
+                                        setState(() {
+                                          _loginError = error.getMessage();
+                                        });
+
                                         if (!context.mounted) return;
                                         showDialog(
                                           context: context,
