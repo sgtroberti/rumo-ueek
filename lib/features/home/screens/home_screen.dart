@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rumo/features/auth/repositories/auth_repository.dart';
-import 'package:rumo/features/onboarding/routes/onboarding_routes.dart';
+import 'package:rumo/features/home/models/nav_item_data.dart';
+import 'package:rumo/features/home/widgets/bottom_nav_item.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,99 +11,96 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
+
+  // Definindo os ícones
+  final List<NavItemData> items = [
+    NavItemData(Icons.map_outlined, "Mapa"),
+    NavItemData(Icons.article_outlined, "Diários"),
+    NavItemData(Icons.explore_outlined, "Explorar"),
+    NavItemData(Icons.person_outline, "Perfil"),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // bottomNavigationBar: BottomNavigationBar(
-      //   currentIndex: currentIndex,
-      //   onTap: (index) {
-      //     setState(() {
-      //       currentIndex = index;
-      //     });
-      //   },
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.map_outlined, size: 20),
-      //       label: "Mapa",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.archive, size: 20),
-      //       label: "Diários",
-      //     ),
-      //   ],
-      // ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            BottomNavItem(
-              icon: Icons.map_outlined,
-              label: "Mapa",
-              isSelected: currentIndex == 0,
-            ),
-            BottomNavItem(
-              icon: Icons.archive,
-              label: "Diários",
-              isSelected: currentIndex == 1,
-            ),
-            IconButton.filled(
-              style: IconButton.styleFrom(
-                backgroundColor: Color(0xffDDE1FF),
-                shape: const CircleBorder(),
-                padding: const EdgeInsets.all(12),
-              ),
-              onPressed: () {},
-              icon: Icon(Icons.add, color: Color(0xff4E61F6), size: 20),
-            ),
-            BottomNavItem(
-              icon: Icons.archive,
-              label: "Explorar",
-              isSelected: currentIndex == 1,
-            ),
-            BottomNavItem(
-              icon: Icons.archive,
-              label: "Perfil",
-              isSelected: currentIndex == 1,
-            ),
-          ],
-        ),
-      ),
+      // Background da tela
       backgroundColor: Colors.white,
-      body: Builder(
-        builder: (context) {
-          return switch (currentIndex) {
-            1 => const Center(child: Text("Diários")),
-            _ => const Center(child: Text("Mapa")),
-          };
-        },
-      ),
-    );
-  }
-}
+      // Barra de navegação customizada
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          height: 72,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(top: BorderSide(color: Color(0xFFEFEFEF))),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              BottomNavItem(
+                icon: items[0].icon,
+                label: items[0].label,
+                isSelected: currentIndex == 0,
+                onTap: () => setState(() => currentIndex = 0),
+              ),
 
-class BottomNavItem extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final bool isSelected;
-
-  const BottomNavItem({
-    super.key,
-    required this.icon,
-    required this.label,
-    required this.isSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, size: 20, color: isSelected ? Colors.blue : Colors.grey),
-        Text(
-          label,
-          style: TextStyle(color: isSelected ? Colors.blue : Colors.grey),
+              BottomNavItem(
+                icon: items[1].icon,
+                label: items[1].label,
+                isSelected: currentIndex == 1,
+                onTap: () => setState(() => currentIndex = 1),
+              ),
+              // Botão central (+)
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                child: InkResponse(
+                  onTap: () {
+                    // Aqui você pode abrir um modal, página, etc.
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(const SnackBar(content: Text("Novo item!")));
+                  },
+                  child: Container(
+                    width: 48,
+                    height: 48,
+                    decoration: const BoxDecoration(
+                      color: Color(0xffDDE1FF),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.add,
+                        color: Color(0xff4E61F6),
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Item 2: Explorar
+              BottomNavItem(
+                icon: items[2].icon,
+                label: items[2].label,
+                isSelected: currentIndex == 2,
+                onTap: () => setState(() => currentIndex = 2),
+              ),
+              // Item 3: Perfil
+              BottomNavItem(
+                icon: items[3].icon,
+                label: items[3].label,
+                isSelected: currentIndex == 3,
+                onTap: () => setState(() => currentIndex = 3),
+              ),
+            ],
+          ),
         ),
-      ],
+      ),
+      // Body de exemplo
+      body: Center(
+        child: Text(
+          items[currentIndex].label,
+          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+        ),
+      ),
     );
   }
 }
