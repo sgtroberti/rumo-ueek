@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:rumo/features/auth/repositories/auth_repository.dart';
 
