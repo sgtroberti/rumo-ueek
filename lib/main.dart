@@ -1,7 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:rumo/features/onboarding/onboarding_screen.dart';
+import 'package:rumo/features/onboarding/routes/onboarding_routes.dart';
+import 'package:rumo/firebase_options.dart';
+import 'package:rumo/routes/app_router.dart';
+import 'package:rumo/theme/app_theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -13,38 +19,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Rumo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.cyan,
-          brightness: Brightness.light,
-        ),
-        bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor: Color(0xFFFFFFFF),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-            side: BorderSide(color: Color(0xFFd9d9d9), width: 1),
-          ),
-        ),
-      ),
-      home: OnboardingScreen(),
+      theme: AppTheme().theme,
+      //home: OnboardingScreen(),
+      routes: AppRouter.routes,
+      initialRoute: OnboardingRoutes.onboardingScreen,
     );
   }
 }
