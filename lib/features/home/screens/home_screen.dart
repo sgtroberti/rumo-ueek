@@ -12,7 +12,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
 
-  // Definindo os ícones
   final List<NavItemData> items = [
     NavItemData(Icons.map_outlined, "Mapa"),
     NavItemData(Icons.article_outlined, "Diários"),
@@ -23,9 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Background da tela
       backgroundColor: Colors.white,
-      // Barra de navegação customizada
+
       bottomNavigationBar: SafeArea(
         child: Container(
           height: 72,
@@ -49,12 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 isSelected: currentIndex == 1,
                 onTap: () => setState(() => currentIndex = 1),
               ),
-              // Botão central (+)
+
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 child: InkResponse(
                   onTap: () {
-                    // Aqui você pode abrir um modal, página, etc.
                     ScaffoldMessenger.of(
                       context,
                     ).showSnackBar(const SnackBar(content: Text("Novo item!")));
@@ -76,14 +73,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              // Item 2: Explorar
+
               BottomNavItem(
                 icon: items[2].icon,
                 label: items[2].label,
                 isSelected: currentIndex == 2,
                 onTap: () => setState(() => currentIndex = 2),
               ),
-              // Item 3: Perfil
+
               BottomNavItem(
                 icon: items[3].icon,
                 label: items[3].label,
